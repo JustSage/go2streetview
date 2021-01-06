@@ -283,6 +283,10 @@ class go2streetview(gui.QgsMapTool):
         self.takeSnapshopItem.triggered.connect(self.takeSnapshopAction)
         self.infoLayerItem = contextMenu.addAction(QtGui.QIcon(os.path.join(self.dirPath,"res","markers.png")),self.tr("Add info layer"))
         self.infoLayerItem.triggered.connect(self.infoLayerAction)
+        # added viewCoords button with image
+        self.viewCoords = contextMenu.addAction(QtGui.QIcon(os.path.join(self.dirPath,"res","coordinates.png")),self.tr("Show Coordinates"))
+        self.viewCoords.triggered.connect(self.viewCoordsAction)
+        
         self.printItem = contextMenu.addAction(QtGui.QIcon(os.path.join(self.dirPath,"res","print.png")),self.tr("Print keymap leaflet"))
         self.printItem.triggered.connect(self.printAction)
         contextMenu.addSeparator()
@@ -295,6 +299,9 @@ class go2streetview(gui.QgsMapTool):
         self.checkFollow.setCheckable(True)
         self.checkFollow.setChecked(False)
         optionsMenu.addSeparator()
+
+ 
+
         self.viewLinks = optionsMenu.addAction(self.tr("View Streetview links"))
         self.viewLinks.setCheckable(True)
         self.viewLinks.setChecked(True)
@@ -313,7 +320,9 @@ class go2streetview(gui.QgsMapTool):
         self.clickToGoControl = optionsMenu.addAction(self.tr("Streetview click to go"))
         self.clickToGoControl.setCheckable(True)
         self.clickToGoControl.setChecked(True)
+
         self.checkFollow.toggled.connect(self.updateRotate)
+        self.viewCoords.toggled.connect(self)
         self.viewLinks.toggled.connect(self.updateSVOptions)
         self.viewAddress.toggled.connect(self.updateSVOptions)
         self.imageDateControl.toggled.connect(self.updateSVOptions)
