@@ -43,6 +43,8 @@ DUM_DIALOG_CLASS, _ = uic.loadUiType(os.path.join(
 INFOBOX_DIALOG_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'ui_infoBox.ui'))
 
+COORDINATES_DIALOG_CLASS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'ui_coordinates.ui'))
 
 # create the view dialog
 class go2streetviewDialog(QtWidgets.QDockWidget, MAIN_DIALOG_CLASS):
@@ -64,6 +66,12 @@ class go2streetviewDialog(QtWidgets.QDockWidget, MAIN_DIALOG_CLASS):
 
     def enterEvent (self,event):
         self.enter_ev.emit(1)
+
+# create the coordinates dialog
+class coordinatesDialog(QtWidgets.QDialog, COORDINATES_DIALOG_CLASS):
+    def __init__(self):
+        QtWidgets.QDialog.__init__(self)
+        self.setupUi(self)
 
 # create the annotation dialog
 class snapshotNotesDialog(QtWidgets.QDialog, NOTES_DIALOG_CLASS):

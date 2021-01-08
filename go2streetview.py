@@ -25,7 +25,7 @@ from PyQt5.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
 from qgis import core, utils, gui
 from qgis.utils import iface, qgsfunction, plugins
 from string import digits
-from .go2streetviewDialog import go2streetviewDialog, dumWidget,snapshotLicenseDialog, infobox
+from .go2streetviewDialog import go2streetviewDialog, dumWidget,snapshotLicenseDialog,coordinatesDialog, infobox
 from .snapshot import snapShot
 from .transformgeom import transformGeometry
 #from py_tiled_layer.tilelayer import TileLayer, TileLayerType
@@ -124,7 +124,6 @@ def heading(fromP, toP):
 
 
 class go2streetview(gui.QgsMapTool):
-
     def __init__(self, iface):
 
        # Save reference to the QGIS interface
@@ -231,6 +230,7 @@ class go2streetview(gui.QgsMapTool):
         self.pointWgs84 = None
         self.mkDirs()
         self.licenceDlg = snapshotLicenseDialog()
+        self.coordinatesDlg = coordinatesDialog()
         self.httpConnecting = None
 
         self.S = QtCore.QSettings()
@@ -300,8 +300,6 @@ class go2streetview(gui.QgsMapTool):
         self.checkFollow.setChecked(False)
         optionsMenu.addSeparator()
 
- 
-
         self.viewLinks = optionsMenu.addAction(self.tr("View Streetview links"))
         self.viewLinks.setCheckable(True)
         self.viewLinks.setChecked(True)
@@ -322,7 +320,6 @@ class go2streetview(gui.QgsMapTool):
         self.clickToGoControl.setChecked(True)
 
         self.checkFollow.toggled.connect(self.updateRotate)
-        self.viewCoords.toggled.connect(self)
         self.viewLinks.toggled.connect(self.updateSVOptions)
         self.viewAddress.toggled.connect(self.updateSVOptions)
         self.imageDateControl.toggled.connect(self.updateSVOptions)
@@ -516,6 +513,9 @@ class go2streetview(gui.QgsMapTool):
             exporter = core.QgsLayoutExporter(myLayout)
             exporter.exportToPdf(fileName,core.QgsLayoutExporter.PdfExportSettings())
 
+
+    def viewCoordsAction(self):
+        self.coordinatesDlg.show()
 
     def aboutAction(self):
         self.licenceDlg.show()
@@ -791,10 +791,12 @@ class go2streetview(gui.QgsMapTool):
     def canvasPressEvent(self, event):
         # Press event handler inherited from QgsMapTool used to store the given location in WGS84 long/lat
         self.pressed=True
+        # need to check positions
         self.pressx = event.pos().x()
         self.pressy = event.pos().y()
         self.movex = event.pos().x()
         self.movey = event.pos().y()
+
         self.highlight=gui.QgsRubberBand(self.iface.mapCanvas(),core.QgsWkbTypes.LineGeometry )
         self.highlight.setColor(QtCore.Qt.yellow)
         self.highlight.setWidth(5)
